@@ -2,8 +2,10 @@ use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use std::{io, process::ExitCode};
 
+mod app_state;
 mod interactive;
 
+use app_state::MonsterState;
 use interactive::InteractiveMode;
 
 #[derive(Parser)]
@@ -30,6 +32,8 @@ enum Commands {
 
 fn main() -> Result<ExitCode> {
     let args = Args::parse();
+
+    let mut monster = MonsterState::load_or_create().context("Failed to load monster state")?;
 
     match args.command {
         Some(Commands::Feed) => {
